@@ -1,6 +1,7 @@
 package com.pradeep.currencyconverter.data.mapper
 
 import com.pradeep.currencyconverter.data.dto.CurrencyRateDto
+import com.pradeep.currencyconverter.data.local.CurrencyFlags
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 
 fun CurrencyRateDto.toDomain(): CurrencyRate {
@@ -8,6 +9,7 @@ fun CurrencyRateDto.toDomain(): CurrencyRate {
         date = date,
         base = base,
         quote = quote,
-        rate = rate
+        rate = rate,
+        flagUrl = CurrencyFlags.getFlagUrl(base) ?: ""
     )
 }

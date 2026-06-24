@@ -47,8 +47,7 @@ fun Avatar(
     }
 }
 
-
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun AvatarPreview() {
     Avatar(

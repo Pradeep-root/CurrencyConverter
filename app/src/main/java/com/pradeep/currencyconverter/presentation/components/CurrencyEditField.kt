@@ -39,7 +39,7 @@ fun CurrencyEditField(
             Avatar(logoUrl = calculatorData.logoUrl)
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(text = calculatorData.symbol, style = MaterialTheme.typography.titleMedium)
+                Text(text = calculatorData.symbol, style = MaterialTheme.typography.titleLarge)
                 Text(text = calculatorData.symbol, style = MaterialTheme.typography.labelSmall)
             }
             Spacer(modifier = Modifier.weight(1f))
