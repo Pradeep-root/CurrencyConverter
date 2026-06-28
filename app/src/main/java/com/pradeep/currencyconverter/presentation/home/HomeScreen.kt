@@ -19,14 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pradeep.currencyconverter.data.local.CurrencyFlags
 import com.pradeep.currencyconverter.domain.model.CalculatorData
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
-import com.pradeep.currencyconverter.presentation.components.CurrencyEditField
+import com.pradeep.currencyconverter.domain.model.InputFieldData
+import com.pradeep.currencyconverter.presentation.components.CurrencyConverterTile
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: HomeScreenViewModel = viewModel()
+    modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = viewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -38,8 +39,7 @@ fun HomeScreen(
         }
 
         is HomeUiState.Error -> ErrorContent(
-            message = state.message,
-            onRetry = viewModel::fetchCurrencyRates
+            message = state.message, onRetry = viewModel::fetchCurrencyRates
         )
     }
 
@@ -73,20 +73,26 @@ private fun HomeContent(data: List<CurrencyRate>, modifier: Modifier) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item { Spacer(modifier = Modifier.height(4.dp)) }
-        item {
-            CurrencyEditField(
-                CalculatorData(
-                    logoUrl = data[1].flagUrl,
-                    symbol = "EUR",
-                    rate = "1.23",
+        val selectedCurrency = data.find { it.quote == "INR" }?.let { currency ->
+            CalculatorData(
+                baseInputFieldData = InputFieldData(
+                    flagUrl = CurrencyFlags.getFlagUrl(currency.base) ?: "",
+                    symbol = currency.base,
+                    rate = currency.rate.toString(),
+                    total = "1.23"
+                ),
+                quoteInputFieldData = InputFieldData(
+                    flagUrl = CurrencyFlags.getFlagUrl(currency.quote) ?: "",
+                    symbol = currency.quote,
+                    rate = currency.rate.toString(),
                     total = "1.23"
                 )
             )
         }
+        selectedCurrency?.let {
+            item {
+                CurrencyConverterTile(calculatorData = selectedCurrency)
+            }
+        }
     }
-}
-
-@Composable
-fun ConverterCard() {
-
 }

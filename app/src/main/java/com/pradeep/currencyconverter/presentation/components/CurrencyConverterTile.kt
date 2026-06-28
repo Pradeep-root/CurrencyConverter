@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pradeep.currencyconverter.domain.model.CalculatorData
+import com.pradeep.currencyconverter.domain.model.InputFieldData
 import com.pradeep.currencyconverter.ui.theme.md_theme_light_primary
 
 @Composable
@@ -46,7 +47,7 @@ fun CurrencyConverterTile(
                 text = "BASE",
                 style = MaterialTheme.typography.labelMedium
             )
-            CurrencyEditField(calculatorData)
+            CurrencyEditField(calculatorData.baseInputFieldData, {})
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -75,7 +76,7 @@ fun CurrencyConverterTile(
                 text = "QUOTE",
                 style = MaterialTheme.typography.labelMedium
             )
-            CurrencyEditField(calculatorData)
+            CurrencyEditField(calculatorData.quoteInputFieldData, {})
 
         }
 
@@ -89,10 +90,18 @@ fun CurrencyConverterTile(
 fun CurrencyConverterTilePreview() {
     CurrencyConverterTile(
         calculatorData = CalculatorData(
-            logoUrl = "https://flagcdn.com/eu.svg",
-            symbol = "EUR",
-            rate = "1.23",
-            total = "1.23"
+            baseInputFieldData = InputFieldData(
+                flagUrl = "https://flagcdn.com/eu.svg",
+                symbol = "EUR",
+                rate = "1.23",
+                total = "1.23"
+            ),
+            quoteInputFieldData = InputFieldData(
+                flagUrl = "https://flagcdn.com/in.svg",
+                symbol = "INR",
+                rate = "1.23",
+                total = "1.23"
+            )
         )
     )
 }

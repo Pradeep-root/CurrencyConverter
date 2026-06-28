@@ -9,7 +9,6 @@ fun CurrencyRateDto.toDomain(): CurrencyRate {
         date = date,
         base = base,
         quote = quote,
-        rate = rate,
-        flagUrl = CurrencyFlags.getFlagUrl(base) ?: ""
+        rate = rate
     )
 }
