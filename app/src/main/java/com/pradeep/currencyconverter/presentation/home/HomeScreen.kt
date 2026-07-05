@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,11 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.pradeep.currencyconverter.data.local.CurrencyFlags
+import com.pradeep.currencyconverter.core.common.CurrencyFlags
 import com.pradeep.currencyconverter.domain.model.CalculatorData
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.domain.model.InputFieldData
 import com.pradeep.currencyconverter.presentation.components.CurrencyConverterTile
+import com.pradeep.currencyconverter.presentation.components.CurrencyItem
 
 @Composable
 fun HomeScreen(
@@ -94,5 +96,22 @@ private fun HomeContent(data: List<CurrencyRate>, modifier: Modifier) {
                 CurrencyConverterTile(calculatorData = selectedCurrency)
             }
         }
+
+        val topFive = getTopFiveCurrencies(data)
+
+        items(topFive.size) { index ->
+            val currency = topFive[index]
+            CurrencyItem(
+                currency = currency,
+                isBase = currency.quote == "EUR"
+            )
+        }
     }
+}
+
+private fun getTopFiveCurrencies(currencyRates: List<CurrencyRate>): List<CurrencyRate> {
+    val topCurrencies = listOf("USD", "EUR", "GBP", "CHF", "CNY")
+
+    return currencyRates.filter { it.quote in topCurrencies }
+        .sortedBy { topCurrencies.indexOf(it.quote) }
 }

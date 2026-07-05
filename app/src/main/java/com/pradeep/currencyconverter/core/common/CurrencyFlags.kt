@@ -1,4 +1,4 @@
-package com.pradeep.currencyconverter.data.local
+package com.pradeep.currencyconverter.core.common
 
 object CurrencyFlags {
 
