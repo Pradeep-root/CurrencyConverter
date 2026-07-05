@@ -97,6 +97,10 @@ private fun HomeContent(data: List<CurrencyRate>, modifier: Modifier) {
             }
         }
 
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         val topFive = getTopFiveCurrencies(data)
 
         items(topFive.size) { index ->
