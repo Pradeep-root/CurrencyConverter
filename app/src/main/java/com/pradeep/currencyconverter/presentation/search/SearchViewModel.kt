@@ -6,7 +6,6 @@ import com.pradeep.currencyconverter.core.common.ApiResult
 import com.pradeep.currencyconverter.core.common.toUserMessage
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.domain.usecase.GetCurrencyRatesUseCase
-import com.pradeep.currencyconverter.presentation.home.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

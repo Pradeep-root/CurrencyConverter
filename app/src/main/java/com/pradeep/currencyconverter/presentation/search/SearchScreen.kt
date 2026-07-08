@@ -1,16 +1,22 @@
 package com.pradeep.currencyconverter.presentation.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,8 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.presentation.components.BaseCurrencyTile
+import com.pradeep.currencyconverter.presentation.components.CurrencyItem
 import com.pradeep.currencyconverter.ui.theme.TextMutedLight
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,18 +51,52 @@ fun SearchScreen(
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        SearchField(query = "") { }
-        Spacer(modifier = Modifier.height(16.dp))
-        BaseCurrencyBar(baseCurrencies = baseCurrencyList())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    when (val state = uiState) {
+        is SearchUiState.Loading -> {
+            LoadingContent()
+        }
+
+        is SearchUiState.Success -> {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                SearchField(query = "") { }
+                Spacer(modifier = Modifier.height(16.dp))
+                BaseCurrencyBar(baseCurrencies = baseCurrencyList())
+                Spacer(modifier = Modifier.height(10.dp))
+                CurrencyRateList(state.data)
+            }
+        }
+
+        is SearchUiState.Error -> ErrorContent(
+            message = state.message, onRetry = viewModel::fetchCurrencyRates
+        )
     }
 
 }
+
+@Composable
+private fun LoadingContent() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun ErrorContent(message: String, onRetry: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = message, style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onRetry) { Text("Retry") }
+        }
+    }
+}
+
 
 @Composable
 fun BaseCurrencyBar(
@@ -62,14 +105,14 @@ fun BaseCurrencyBar(
 
     Column {
         Text(
-            text = "BASE CURRENCIES",
+            text = "BASE CURRENCY",
             style = MaterialTheme.typography.titleMedium,
             color = TextMutedLight
         )
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(baseCurrencies) { currency ->
                 BaseCurrencyTile(
@@ -95,6 +138,7 @@ fun SearchField(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         placeholder = { Text("Search") },
+        shape = RoundedCornerShape(16.dp),
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = null)
         },
@@ -106,6 +150,28 @@ fun SearchField(
             }
         }
     )
+}
+
+@Composable
+fun CurrencyRateList(
+    currencyRates: List<CurrencyRate>
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "CURRENCIES",
+            style = MaterialTheme.typography.titleMedium,
+            color = TextMutedLight
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(currencyRates) { item ->
+                CurrencyItem(currency = item, isBase = false)
+            }
+        }
+    }
 }
 
 private fun baseCurrencyList(): List<String> {
@@ -122,4 +188,10 @@ fun SearchFieldPreview() {
 @Composable
 fun BaseCurrencyBarPreview() {
     BaseCurrencyBar(baseCurrencyList())
+}
+
+@Preview
+@Composable
+fun CurrencyRateListPreview() {
+    //CurrencyRateList()
 }
