@@ -6,147 +6,176 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// ── Optional: add a custom font ────────────────────────────
-// 1. Add font files to res/font/ (e.g. inter_regular.ttf)
-// 2. Uncomment below and replace FontFamily.Default
+// ─────────────────────────────────────────────
+// Font family
+// ─────────────────────────────────────────────
+// Wise uses "Inter" (very close to the system sans-serif on Android).
+// Add Inter TTF files to res/font/ and reference them here.
+// Falls back to system default (Roboto) if not present.
 //
-// val InterFamily = FontFamily(
-//     Font(R.font.inter_regular, FontWeight.Normal),
-//     Font(R.font.inter_medium, FontWeight.Medium),
+// To add Inter:
+//   1. Download from https://fonts.google.com/specimen/Inter
+//   2. Place inter_regular.ttf, inter_medium.ttf, inter_semibold.ttf,
+//      inter_bold.ttf in app/src/main/res/font/
+//   3. Uncomment the FontFamily block below and remove the fallback line.
+//
+// val InterFontFamily = FontFamily(
+//     Font(R.font.inter_regular,  FontWeight.Normal),
+//     Font(R.font.inter_medium,   FontWeight.Medium),
 //     Font(R.font.inter_semibold, FontWeight.SemiBold),
-//     Font(R.font.inter_bold, FontWeight.Bold),
-//     Font(R.font.inter_extrabold, FontWeight.ExtraBold),
+//     Font(R.font.inter_bold,     FontWeight.Bold),
 // )
 
-val AppFont = FontFamily.Default // replace with InterFamily when font added
+val InterFontFamily = FontFamily.Default   // replace with above when fonts are added
 
-// ── Type scale ──────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// Typography scale  (mapped from design px → sp)
+// Design canvas is 375 wide (1×); sp ≈ px at default scale.
+// ─────────────────────────────────────────────
 
-val RateXTypography = Typography(
+val CurrencyTypography = Typography(
 
-    // ─ Display (rarely used in app; keep for onboarding/splash) ─
+    // ── Display ──────────────────────────────
+    // Not heavily used; kept for completeness.
     displayLarge = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Black,
-        fontSize = 57.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize   = 57.sp,
         lineHeight = 64.sp,
-        letterSpacing = (-0.25).sp
+        letterSpacing = (-0.25).sp,
     ),
     displayMedium = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 45.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize   = 45.sp,
         lineHeight = 52.sp,
-        letterSpacing = 0.sp
     ),
     displaySmall = TextStyle(
-        fontFamily = AppFont,
+        fontFamily = InterFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 36.sp,
+        fontSize   = 36.sp,
         lineHeight = 44.sp,
-        letterSpacing = 0.sp
     ),
 
-    // ─ Headline ──────────────────────────────────────────────
+    // ── Headline ─────────────────────────────
+    // headlineLarge  → app logo / hero text (28 px in design)
     headlineLarge = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 20.sp,
-        lineHeight = 28.sp,
-        letterSpacing = (-0.5).sp
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize   = 28.sp,
+        lineHeight = 34.sp,
+        letterSpacing = (-0.5).sp,
     ),
+    // headlineMedium → large amount field (22 px in design)
     headlineMedium = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.sp
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize   = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = (-0.25).sp,
     ),
+    // headlineSmall  → section heading inside cards (18 px)
     headlineSmall = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.sp
-    ),
-
-    // ─ Title ─────────────────────────────────────────────────
-    titleLarge = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize   = 18.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.sp
     ),
+
+    // ── Title ────────────────────────────────
+    // titleLarge  → screen / card title (16 px, semi-bold)
+    titleLarge = TextStyle(
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize   = 16.sp,
+        lineHeight = 22.sp,
+    ),
+    // titleMedium → currency name in converter row (15 px)
     titleMedium = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize   = 15.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.sp
+        letterSpacing = 0.1.sp,
     ),
+    // titleSmall  → tab labels (13 px, medium)
     titleSmall = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.sp
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize   = 13.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.1.sp,
     ),
 
-    // ─ Body ──────────────────────────────────────────────────
+    // ── Body ─────────────────────────────────
+    // bodyLarge   → primary body text, list row primary (14 px)
     bodyLarge = TextStyle(
-        fontFamily = AppFont,
+        fontFamily = InterFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize   = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.sp
+        letterSpacing = 0.25.sp,
     ),
+    // bodyMedium  → secondary body / row sub-label (13 px)
     bodyMedium = TextStyle(
-        fontFamily = AppFont,
+        fontFamily = InterFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.sp
+        fontSize   = 13.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.25.sp,
     ),
+    // bodySmall   → muted helper text, rate sub-label (11 px)
     bodySmall = TextStyle(
-        fontFamily = AppFont,
+        fontFamily = InterFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
+        fontSize   = 11.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.04.sp
+        letterSpacing = 0.4.sp,
     ),
 
-    // ─ Label ─────────────────────────────────────────────────
+    // ── Label ────────────────────────────────
+    // labelLarge  → button text (14 px, medium) — also used by M3 buttons automatically
     labelLarge = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 15.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize   = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.02.sp
+        letterSpacing = 0.1.sp,
     ),
+    // labelMedium → badge / chip text (12 px)
     labelMedium = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 10.sp,
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize   = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.03.sp
+        letterSpacing = 0.5.sp,
     ),
+    // labelSmall  → chart axis labels, timestamps (10 px)
     labelSmall = TextStyle(
-        fontFamily = AppFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.07.sp
+        fontFamily = InterFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize   = 10.sp,
+        lineHeight = 14.sp,
+        letterSpacing = 0.5.sp,
     ),
 )
 
-// ── Amount input style (not in M3 scale — use directly) ────
-// Use this for the large currency-amount input field on the converter screen.
+// ─────────────────────────────────────────────
+// Convenience aliases (optional — reference
+// these in composables instead of raw sp values)
+// ─────────────────────────────────────────────
 
-val ConverterAmountStyle = TextStyle(
-    fontFamily = AppFont,
-    fontWeight = FontWeight.Bold,
-    fontSize = 32.sp,
-    lineHeight = 40.sp,
-    letterSpacing = 0.sp
-)
+/** App logo / hero display text */
+val Typography.logoStyle get() = headlineLarge
+
+/** Large amount input field */
+val Typography.amountStyle get() = headlineMedium
+
+/** Currency code label (EUR, USD …) */
+val Typography.currencyCodeStyle get() = titleMedium
+
+/** Chart x-axis tick label */
+val Typography.chartLabelStyle get() = labelSmall
+
+/** Settings row subtitle / helper text */
+val Typography.helperStyle get() = bodySmall

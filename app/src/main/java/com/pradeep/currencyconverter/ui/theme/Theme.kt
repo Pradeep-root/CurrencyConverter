@@ -1,74 +1,208 @@
 package com.pradeep.currencyconverter.ui.theme
 
-import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-// ── Light colour scheme ────────────────────────────────────
-// RateX is light-theme only; no dark variant needed.
+// ─────────────────────────────────────────────
+// Extended (non-Material3) colour tokens
+// ─────────────────────────────────────────────
 
-private val LightColorScheme = lightColorScheme(
-    primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
-    primaryContainer = md_theme_light_primaryContainer,
-    onPrimaryContainer = md_theme_light_onPrimaryContainer,
-    secondary = md_theme_light_secondary,
-    onSecondary = md_theme_light_onSecondary,
-    secondaryContainer = md_theme_light_secondaryContainer,
-    onSecondaryContainer = md_theme_light_onSecondaryContainer,
-    tertiary = md_theme_light_tertiary,
-    onTertiary = md_theme_light_onTertiary,
-    tertiaryContainer = md_theme_light_tertiaryContainer,
-    onTertiaryContainer = md_theme_light_onTertiaryContainer,
-    error = md_theme_light_error,
-    onError = md_theme_light_onError,
-    errorContainer = md_theme_light_errorContainer,
-    onErrorContainer = md_theme_light_onErrorContainer,
-    background = md_theme_light_background,
-    onBackground = md_theme_light_onBackground,
-    surface = md_theme_light_surface,
-    onSurface = md_theme_light_onSurface,
-    surfaceVariant = md_theme_light_surfaceVariant,
-    onSurfaceVariant = md_theme_light_onSurfaceVariant,
-    outline = md_theme_light_outline,
-    outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim,
-    inverseSurface = md_theme_light_inverseSurface,
-    inverseOnSurface = md_theme_light_inverseOnSurface,
-    inversePrimary = md_theme_light_inversePrimary,
-    surfaceTint = md_theme_light_surfaceTint,
+@Immutable
+data class ExtendedColors(
+    /** Rate trending up */
+    val positive: Color,
+    val positiveContainer: Color,
+    /** Rate trending down */
+    val negative: Color,
+    val negativeContainer: Color,
+    /** Secondary label text (e.g. currency name under amount) */
+    val textSecondary: Color,
+    /** Muted / placeholder text */
+    val textMuted: Color,
+    /** Card / row divider */
+    val divider: Color,
+    /** Toggle ON thumb colour — same as primary, surfaced here for convenience */
+    val toggleOn: Color,
+    /** Toggle OFF track */
+    val toggleOff: Color,
 )
 
-// ── Theme entry point ──────────────────────────────────────
+val LocalExtendedColors = staticCompositionLocalOf {
+    ExtendedColors(
+        positive          = PositiveText,
+        positiveContainer = PositiveContainer,
+        negative          = NegativeText,
+        negativeContainer = NegativeContainer,
+        textSecondary     = TextSecondaryLight,
+        textMuted         = TextMutedLight,
+        divider           = DividerLight,
+        toggleOn          = WiseLimeGreen,
+        toggleOff         = ToggleOff,
+    )
+}
+
+// ─────────────────────────────────────────────
+// Material 3 colour schemes
+// ─────────────────────────────────────────────
+
+private val LightColorScheme: ColorScheme = lightColorScheme(
+    // ── Primary ──────────────────────────────
+    primary              = WiseLimeGreen,
+    onPrimary            = WiseDarkGreen,
+    primaryContainer     = WiseMidGreen,
+    onPrimaryContainer   = WiseSoftLime,
+
+    // ── Secondary (neutral-green tones) ──────
+    secondary            = Color(0xFF506645),
+    onSecondary          = Color(0xFFFFFFFF),
+    secondaryContainer   = Color(0xFFD3EBC3),
+    onSecondaryContainer = Color(0xFF0E1F08),
+
+    // ── Tertiary (accent blue for badges) ────
+    tertiary             = Color(0xFF185FA5),
+    onTertiary           = Color(0xFFFFFFFF),
+    tertiaryContainer    = Color(0xFFE6F1FB),
+    onTertiaryContainer  = Color(0xFF001D39),
+
+    // ── Error ────────────────────────────────
+    error                = NegativeText,
+    onError              = Color(0xFFFFFFFF),
+    errorContainer       = NegativeContainer,
+    onErrorContainer     = Color(0xFF410002),
+
+    // ── Background ───────────────────────────
+    background           = BackgroundLight,
+    onBackground         = TextPrimaryLight,
+
+    // ── Surface ──────────────────────────────
+    surface              = SurfaceLight,
+    onSurface            = TextPrimaryLight,
+    surfaceVariant       = SurfaceVariantLight,
+    onSurfaceVariant     = TextSecondaryLight,
+
+    // ── Outline ──────────────────────────────
+    outline              = OutlineLight,
+    outlineVariant       = DividerLight,
+
+    // ── Inverse ──────────────────────────────
+    inverseSurface       = WiseDarkGreen,
+    inverseOnSurface     = BackgroundLight,
+    inversePrimary       = WiseLimeGreen,
+
+    // ── Scrim ────────────────────────────────
+    scrim                = Color(0xFF000000),
+)
+
+private val DarkColorScheme: ColorScheme = darkColorScheme(
+    // ── Primary ──────────────────────────────
+    primary              = WiseLimeGreen,
+    onPrimary            = WiseDarkGreen,
+    primaryContainer     = WiseMidGreen,
+    onPrimaryContainer   = WiseSoftLime,
+
+    // ── Secondary ────────────────────────────
+    secondary            = Color(0xFFB7CCA9),
+    onSecondary          = Color(0xFF223519),
+    secondaryContainer   = Color(0xFF384D2E),
+    onSecondaryContainer = Color(0xFFD3EBC3),
+
+    // ── Tertiary ─────────────────────────────
+    tertiary             = Color(0xFFADC8FF),
+    onTertiary           = Color(0xFF002F67),
+    tertiaryContainer    = Color(0xFF0C447C),
+    onTertiaryContainer  = Color(0xFFD6E3FF),
+
+    // ── Error ────────────────────────────────
+    error                = NegativeTextDark,
+    onError              = Color(0xFF690005),
+    errorContainer       = NegativeContainerDark,
+    onErrorContainer     = Color(0xFFFFDAD6),
+
+    // ── Background ───────────────────────────
+    background           = BackgroundDark,
+    onBackground         = TextPrimaryDark,
+
+    // ── Surface ──────────────────────────────
+    surface              = SurfaceDark,
+    onSurface            = TextPrimaryDark,
+    surfaceVariant       = SurfaceVariantDark,
+    onSurfaceVariant     = TextSecondaryDark,
+
+    // ── Outline ──────────────────────────────
+    outline              = OutlineDark,
+    outlineVariant       = DividerDark,
+
+    // ── Inverse ──────────────────────────────
+    inverseSurface       = BackgroundLight,
+    inverseOnSurface     = WiseDarkGreen,
+    inversePrimary       = WiseMidGreen,
+
+    // ── Scrim ────────────────────────────────
+    scrim                = Color(0xFF000000),
+)
+
+// ─────────────────────────────────────────────
+// Theme entry point
+// ─────────────────────────────────────────────
 
 @Composable
 fun CurrencyConverterTheme(
-    // Reserved for future dark-mode support; app is light-only for now.
-    darkTheme: Boolean = false,
-    content: @Composable () -> Unit
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = LightColorScheme // swap to darkColorScheme() when ready
-    val view = LocalView.current
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
-    // Set status bar colour to BrandDeep (#1A1F71) on every screen
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = BrandDeep.toArgb()
-            WindowCompat
-                .getInsetsController(window, view)
-                .isAppearanceLightStatusBars = false // white icons on dark bar
-        }
+    val extendedColors = if (darkTheme) {
+        ExtendedColors(
+            positive          = PositiveTextDark,
+            positiveContainer = PositiveContainerDark,
+            negative          = NegativeTextDark,
+            negativeContainer = NegativeContainerDark,
+            textSecondary     = TextSecondaryDark,
+            textMuted         = TextMutedDark,
+            divider           = DividerDark,
+            toggleOn          = WiseLimeGreen,
+            toggleOff         = ToggleOffDark,
+        )
+    } else {
+        ExtendedColors(
+            positive          = PositiveText,
+            positiveContainer = PositiveContainer,
+            negative          = NegativeText,
+            negativeContainer = NegativeContainer,
+            textSecondary     = TextSecondaryLight,
+            textMuted         = TextMutedLight,
+            divider           = DividerLight,
+            toggleOn          = WiseLimeGreen,
+            toggleOff         = ToggleOff,
+        )
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = RateXTypography,
-        content = content
-    )
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography  = CurrencyTypography,
+            content     = content,
+        )
+    }
 }
+
+/**
+ * Shortcut to access extended colours from any composable inside [CurrencyConverterTheme].
+ *
+ * Usage:
+ * ```kotlin
+ * val ext = MaterialTheme.extendedColors
+ * Text(color = ext.positive, ...)
+ * ```
+ */
+val MaterialTheme.extendedColors: ExtendedColors
+    @Composable get() = LocalExtendedColors.current

@@ -1,6 +1,5 @@
 package com.pradeep.currencyconverter.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,12 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pradeep.currencyconverter.domain.model.InputFieldData
-import com.pradeep.currencyconverter.ui.theme.AccentLight
-import com.pradeep.currencyconverter.ui.theme.ConverterAmountStyle
 
 @Composable
 fun CurrencyEditField(
@@ -46,7 +42,6 @@ fun CurrencyEditField(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = AccentLight)
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -61,7 +56,6 @@ fun CurrencyEditField(
                     BasicTextField(
                         value = inputText,
                         onValueChange = onValueChange,
-                        textStyle = ConverterAmountStyle.copy(textAlign = TextAlign.End),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number

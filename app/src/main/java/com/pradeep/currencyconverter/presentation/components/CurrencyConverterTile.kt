@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pradeep.currencyconverter.domain.model.CalculatorData
 import com.pradeep.currencyconverter.domain.model.InputFieldData
-import com.pradeep.currencyconverter.ui.theme.md_theme_light_primary
+import com.pradeep.currencyconverter.ui.theme.BadgeSgdBg
 
 @Composable
 fun CurrencyConverterTile(
@@ -62,7 +62,7 @@ fun CurrencyConverterTile(
 
                 Button(
                     onClick = {},
-                    colors = ButtonDefaults.buttonColors(containerColor = md_theme_light_primary),
+                    colors = ButtonDefaults.buttonColors(containerColor = BadgeSgdBg),
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Icon(

@@ -2,91 +2,109 @@ package com.pradeep.currencyconverter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ── Brand palette ──────────────────────────────────────────
+// ─────────────────────────────────────────────
+// Wise brand palette
+// ─────────────────────────────────────────────
 
-/** Deep navy — app bar, status bar, header gradients */
-val BrandDeep = Color(0xFF1A1F71)
+/** Primary lime green — buttons, active tabs, swap button, toggles ON */
+val WiseLimeGreen   = Color(0xFF9FE870)
 
-/** Mid-brand blue — gradient end colour, secondary surfaces */
-val BrandMid = Color(0xFF1E3A8A)
+/** Dark forest green — header background, primary text, active nav icons */
+val WiseDarkGreen   = Color(0xFF163300)
 
-/** Primary accent — buttons, active state, links */
-val Accent = Color(0xFF2563EB)
+/** Mid forest green — primaryContainer in light theme */
+val WiseMidGreen    = Color(0xFF27500A)
 
-/** Accent tint — selected row bg, chip fill, focus rings */
-val AccentLight = Color(0xFFEFF6FF)
+/** Soft lime — onPrimaryContainer in dark theme */
+val WiseSoftLime    = Color(0xFFC0DD97)
 
-/** Focus ring / border highlight */
-val AccentBorderFocus = Color(0xFF93C5FD)
+// ─────────────────────────────────────────────
+// Backgrounds & surfaces
+// ─────────────────────────────────────────────
 
-// ── Surface / background ───────────────────────────────────
+/** App background — light warm gray */
+val BackgroundLight = Color(0xFFF5F5F0)
 
-/** App-level page background */
-val SurfaceApp = Color(0xFFF0F4FF)
+/** App background — dark mode */
+val BackgroundDark  = Color(0xFF0E1A00)
 
-/** Card / sheet surface */
-val SurfaceCard = Color(0xFFFFFFFF)
+/** Card / Sheet surface — light */
+val SurfaceLight    = Color(0xFFFFFFFF)
 
-/** Dividers, input borders */
-val BorderDefault = Color(0xFFE2E8F0)
+/** Card / Sheet surface — dark */
+val SurfaceDark     = Color(0xFF1A2810)
 
-// ── Semantic colours ───────────────────────────────────────
+/** Surface variant — dividers, time-range inactive buttons */
+val SurfaceVariantLight = Color(0xFFF0F0E8)
+val SurfaceVariantDark  = Color(0xFF243618)
 
-/** Rate up / positive change */
-val SuccessGreen = Color(0xFF059669)
-val SuccessBg = Color(0xFFECFDF5)
+// ─────────────────────────────────────────────
+// Borders & outlines
+// ─────────────────────────────────────────────
 
-/** Rate down / negative change */
-val DangerRed = Color(0xFFDC2626)
-val DangerBg = Color(0xFFFEF2F2)
+val OutlineLight    = Color(0xFFE8E8E0)
+val OutlineDark     = Color(0xFF3A4E30)
 
-/** Premium badge, AdSense labels, rate alerts */
-val Gold = Color(0xFFF59E0B)
+val DividerLight    = Color(0xFFF0F0E8)
+val DividerDark     = Color(0xFF2A3C20)
 
-// ── Text colours ────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// Text
+// ─────────────────────────────────────────────
 
-val TextPrimary = Color(0xFF0F172A)
-val TextSecondary = Color(0xFF64748B)
-val TextMuted = Color(0xFF94A3B8)
+/** Primary body text */
+val TextPrimaryLight   = Color(0xFF163300)
+val TextPrimaryDark    = Color(0xFFD8E8CC)
 
-// ── M3 light colour scheme aliases ──────────────────────────
-// These map RateX tokens to the 29 Material 3 colour roles.
-// Reference: m3.material.io/styles/color/roles
+/** Secondary / supporting text */
+val TextSecondaryLight = Color(0xFF6B7A6B)
+val TextSecondaryDark  = Color(0xFF8FAE85)
 
-val md_theme_light_primary = Accent
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = AccentLight
-val md_theme_light_onPrimaryContainer = BrandDeep
+/** Muted / placeholder text */
+val TextMutedLight     = Color(0xFF9B9B8E)
+val TextMutedDark      = Color(0xFF6E7E66)
 
-val md_theme_light_secondary = BrandMid
-val md_theme_light_onSecondary = Color(0xFFFFFFFF)
-val md_theme_light_secondaryContainer = Color(0xFFD6E4FF)
-val md_theme_light_onSecondaryContainer = Color(0xFF001B63)
+// ─────────────────────────────────────────────
+// Semantic — positive (rate up / success)
+// ─────────────────────────────────────────────
 
-val md_theme_light_tertiary = Gold
-val md_theme_light_onTertiary = Color(0xFFFFFFFF)
-val md_theme_light_tertiaryContainer = Color(0xFFFEF3C7)
-val md_theme_light_onTertiaryContainer = Color(0xFF4D3000)
+val PositiveText       = Color(0xFF0F6E56)
+val PositiveContainer  = Color(0xFFE1F5EE)
+val PositiveTextDark   = Color(0xFF5DCAA5)
+val PositiveContainerDark = Color(0xFF08453A)
 
-val md_theme_light_error = DangerRed
-val md_theme_light_onError = Color(0xFFFFFFFF)
-val md_theme_light_errorContainer = DangerBg
-val md_theme_light_onErrorContainer = Color(0xFF7A0019)
+// ─────────────────────────────────────────────
+// Semantic — negative (rate down / error)
+// ─────────────────────────────────────────────
 
-val md_theme_light_background = SurfaceApp
-val md_theme_light_onBackground = TextPrimary
+val NegativeText       = Color(0xFF993C1D)
+val NegativeContainer  = Color(0xFFFAECE7)
+val NegativeTextDark   = Color(0xFFF09575)
+val NegativeContainerDark = Color(0xFF5C2010)
 
-val md_theme_light_surface = SurfaceCard
-val md_theme_light_onSurface = TextPrimary
-val md_theme_light_surfaceVariant = Color(0xFFE8EDF8)
-val md_theme_light_onSurfaceVariant = TextSecondary
+// ─────────────────────────────────────────────
+// Toggle
+// ─────────────────────────────────────────────
 
-val md_theme_light_outline = BorderDefault
-val md_theme_light_outlineVariant = AccentBorderFocus
-val md_theme_light_scrim = Color(0xFF000000)
+val ToggleOff          = Color(0xFFE0E0D8)
+val ToggleOffDark      = Color(0xFF3A4430)
 
-val md_theme_light_inverseSurface = BrandDeep
-val md_theme_light_inverseOnSurface = AccentLight
-val md_theme_light_inversePrimary = Color(0xFF93C5FD)
+// ─────────────────────────────────────────────
+// Currency flag badge colours
+// Each pair: (background, text)
+// ─────────────────────────────────────────────
 
-val md_theme_light_surfaceTint = Accent
+val BadgeEurBg  = Color(0xFFE6F1FB);  val BadgeEurText  = Color(0xFF185FA5)
+val BadgeUsdBg  = Color(0xFFEAF3DE);  val BadgeUsdText  = Color(0xFF3B6D11)
+val BadgeGbpBg  = Color(0xFFFAECE7);  val BadgeGbpText  = Color(0xFF993C1D)
+val BadgeJpyBg  = Color(0xFFFCEBEB);  val BadgeJpyText  = Color(0xFFA32D2D)
+val BadgeChfBg  = Color(0xFFFAEEDA);  val BadgeChfText  = Color(0xFF854F0B)
+val BadgeCadBg  = Color(0xFFFBEAF0);  val BadgeCadText  = Color(0xFF993356)
+val BadgeAudBg  = Color(0xFFC0DD97);  val BadgeAudText  = Color(0xFF27500A)
+val BadgeCnyBg  = Color(0xFFFCEBEB);  val BadgeCnyText  = Color(0xFFE24B4A)
+val BadgeInrBg  = Color(0xFFFAEEDA);  val BadgeInrText  = Color(0xFFBA7517)
+val BadgeBrlBg  = Color(0xFFE1F5EE);  val BadgeBrlText  = Color(0xFF1D9E75)
+val BadgeMxnBg  = Color(0xFFE1F5EE);  val BadgeMxnText  = Color(0xFF0F6E56)
+val BadgeSekBg  = Color(0xFFE6F1FB);  val BadgeSekText  = Color(0xFF0C447C)
+val BadgeSgdBg  = Color(0xFFEAF3DE);  val BadgeSgdText  = Color(0xFF639922)
+val BadgeHkdBg  = Color(0xFFFCEBEB);  val BadgeHkdText  = Color(0xFFD85A30)
