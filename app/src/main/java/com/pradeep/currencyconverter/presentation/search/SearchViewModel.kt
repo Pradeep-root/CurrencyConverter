@@ -16,14 +16,21 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getCurrencyRatesUseCase: GetCurrencyRatesUseCase
-): ViewModel() {
+) : ViewModel() {
 
 
     private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Loading)
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
+
     init {
         fetchCurrencyRates()
+    }
+
+    fun onQueryChange(value: String) {
+        _query.value = value
     }
 
     fun fetchCurrencyRates() {

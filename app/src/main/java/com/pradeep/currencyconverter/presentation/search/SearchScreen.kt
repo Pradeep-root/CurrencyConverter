@@ -26,9 +26,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,10 +45,8 @@ fun SearchScreen(
     viewModel: SearchViewModel = viewModel()
 ) {
 
-    var query by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
 
     when (val state = uiState) {
         is SearchUiState.Loading -> {
@@ -64,11 +59,16 @@ fun SearchScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                SearchField(query = "") { }
+                SearchField(query = query, onQueryChange = viewModel::onQueryChange)
                 Spacer(modifier = Modifier.height(16.dp))
                 BaseCurrencyBar(baseCurrencies = baseCurrencyList())
                 Spacer(modifier = Modifier.height(10.dp))
-                CurrencyRateList(state.data)
+                CurrencyRateList(state.data.filter { currencyRate ->
+                    currencyRate.quote.contains(
+                        viewModel.query.value,
+                        ignoreCase = true
+                    )
+                })
             }
         }
 
