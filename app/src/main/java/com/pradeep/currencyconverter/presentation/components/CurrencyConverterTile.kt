@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pradeep.currencyconverter.domain.model.CalculatorData
@@ -39,7 +38,7 @@ fun CurrencyConverterTile(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
         ) {
             Text(
@@ -57,7 +56,7 @@ fun CurrencyConverterTile(
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     thickness = 2.dp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
 
                 Button(
@@ -81,8 +80,8 @@ fun CurrencyConverterTile(
         }
 
     }
-
 }
+
 
 
 @Preview

@@ -34,7 +34,7 @@ fun CurrencyItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -60,7 +60,7 @@ fun CurrencyEditField(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number
                         ),
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.surface),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -75,7 +75,6 @@ fun CurrencyEditField(
             }
         }
     }
-
 }
 
 @Preview(showBackground = true)
