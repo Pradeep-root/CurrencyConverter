@@ -5,5 +5,5 @@ import com.pradeep.currencyconverter.domain.model.CurrencyRate
 
 interface CurrencyRatesRepository {
 
-   suspend fun getRates(): ApiResult<List<CurrencyRate>>
+   suspend fun getRates(base: String): ApiResult<List<CurrencyRate>>
 }

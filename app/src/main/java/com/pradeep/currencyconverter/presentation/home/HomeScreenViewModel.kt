@@ -27,7 +27,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun fetchCurrencyRates() {
         viewModelScope.launch {
-            _uiState.value = when (val result = getCurrencyRatesUseCase()) {
+            _uiState.value = when (val result = getCurrencyRatesUseCase("EUR")) {
                 is ApiResult.Error -> HomeUiState.Error(result.exception.toUserMessage())
                 is ApiResult.Success -> HomeUiState.Success(result.data)
             }

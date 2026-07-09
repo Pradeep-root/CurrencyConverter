@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pradeep.currencyconverter.core.common.CurrencyFlags
 import com.pradeep.currencyconverter.domain.model.CalculatorData
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
@@ -29,7 +29,7 @@ import com.pradeep.currencyconverter.presentation.components.CurrencyItem
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = viewModel()
+    modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,7 +71,7 @@ private fun HomeContent(data: List<CurrencyRate>, modifier: Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item { Spacer(modifier = Modifier.height(4.dp)) }

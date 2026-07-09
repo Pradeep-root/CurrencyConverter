@@ -25,17 +25,13 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
-    init {
-        fetchCurrencyRates()
-    }
-
     fun onQueryChange(value: String) {
         _query.value = value
     }
 
-    fun fetchCurrencyRates() {
+    fun fetchCurrencyRates(base: String) {
         viewModelScope.launch {
-            _uiState.value = when (val result = getCurrencyRatesUseCase()) {
+            _uiState.value = when (val result = getCurrencyRatesUseCase(base)) {
                 is ApiResult.Error -> SearchUiState.Error(result.exception.toUserMessage())
                 is ApiResult.Success -> SearchUiState.Success(result.data)
             }

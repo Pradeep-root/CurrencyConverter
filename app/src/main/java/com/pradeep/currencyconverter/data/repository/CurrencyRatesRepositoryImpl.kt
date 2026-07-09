@@ -16,10 +16,10 @@ class CurrencyRatesRepositoryImpl @Inject constructor(
     private val networkErrorMapper: NetworkErrorMapper
 ) : CurrencyRatesRepository {
 
-    override suspend fun getRates(): ApiResult<List<CurrencyRate>> =
+    override suspend fun getRates(base: String): ApiResult<List<CurrencyRate>> =
         withContext(dispatcherProvider.io) {
             try {
-                val response = apiService.getRates()
+                val response = apiService.getRates(base)
                 ApiResult.Success(response.map { it.toDomain() })
             } catch (e: Exception) {
                 ApiResult.Error(networkErrorMapper.map(e))

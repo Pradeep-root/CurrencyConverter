@@ -25,14 +25,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.presentation.components.BaseCurrencyTile
 import com.pradeep.currencyconverter.presentation.components.CurrencyItem
@@ -42,11 +45,16 @@ import com.pradeep.currencyconverter.ui.theme.TextMutedLight
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = viewModel()
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
+    var selectedBase by remember { mutableStateOf("EUR") }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchCurrencyRates(selectedBase)
+    }
 
     when (val state = uiState) {
         is SearchUiState.Loading -> {
@@ -61,7 +69,14 @@ fun SearchScreen(
             ) {
                 SearchField(query = query, onQueryChange = viewModel::onQueryChange)
                 Spacer(modifier = Modifier.height(16.dp))
-                BaseCurrencyBar(baseCurrencies = baseCurrencyList())
+                BaseCurrencyBar(
+                    baseCurrencies = baseCurrencyList(),
+                    selectedBase = selectedBase,
+                    onBaseSelected = { newBase ->
+                        selectedBase = newBase
+                        viewModel.fetchCurrencyRates(newBase)
+                    }
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 CurrencyRateList(state.data.filter { currencyRate ->
                     currencyRate.quote.contains(
@@ -73,7 +88,7 @@ fun SearchScreen(
         }
 
         is SearchUiState.Error -> ErrorContent(
-            message = state.message, onRetry = viewModel::fetchCurrencyRates
+            message = state.message, onRetry = {viewModel.fetchCurrencyRates(selectedBase)}
         )
     }
 
@@ -100,7 +115,9 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
 
 @Composable
 fun BaseCurrencyBar(
-    baseCurrencies: List<String>
+    baseCurrencies: List<String>,
+    selectedBase: String,
+    onBaseSelected: (String) -> Unit
 ) {
 
     Column {
@@ -116,7 +133,9 @@ fun BaseCurrencyBar(
         ) {
             items(baseCurrencies) { currency ->
                 BaseCurrencyTile(
-                    currencyText = currency
+                    currencyText = currency,
+                    isSelected = (currency == selectedBase),
+                    onClick = { onBaseSelected(currency) }
                 )
             }
         }
@@ -187,7 +206,7 @@ fun SearchFieldPreview() {
 @Preview
 @Composable
 fun BaseCurrencyBarPreview() {
-    BaseCurrencyBar(baseCurrencyList())
+    BaseCurrencyBar(baseCurrencyList(), "EUR", {})
 }
 
 @Preview

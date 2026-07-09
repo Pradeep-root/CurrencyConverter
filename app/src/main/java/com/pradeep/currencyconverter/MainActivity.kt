@@ -4,11 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import com.pradeep.currencyconverter.presentation.search.SearchScreen
+import com.pradeep.currencyconverter.presentation.MainScreen
 import com.pradeep.currencyconverter.ui.theme.CurrencyConverterTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,9 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CurrencyConverterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SearchScreen(modifier = Modifier.padding(innerPadding))
-                }
+                MainScreen()
             }
         }
     }

@@ -9,6 +9,6 @@ class GetCurrencyRatesUseCase @Inject constructor(
     private val currencyRatesRepository: CurrencyRatesRepository
 ) {
 
-    suspend operator fun invoke(): ApiResult<List<CurrencyRate>> =
-        currencyRatesRepository.getRates()
+    suspend operator fun invoke(base: String): ApiResult<List<CurrencyRate>> =
+        currencyRatesRepository.getRates(base)
 }
