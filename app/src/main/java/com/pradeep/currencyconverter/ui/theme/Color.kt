@@ -35,8 +35,8 @@ val SurfaceLight    = Color(0xFFFFFFFF)
 val SurfaceDark     = Color(0xFF1A2810)
 
 /** Surface variant — dividers, time-range inactive buttons */
-val SurfaceVariantLight = Color(0xFFF0F0E8)
-val SurfaceVariantDark  = Color(0xFF243618)
+val SurfaceVariantLight = Color(0xFFE8E8DE)
+val SurfaceVariantDark  = Color(0xFF1A2810)
 
 // ─────────────────────────────────────────────
 // Borders & outlines
