@@ -43,7 +43,8 @@ fun HomeScreen(
                 onAmountChange = { amountString ->
                     val amount = amountString.toDoubleOrNull() ?: 0.0
                     viewModel.updateAmount(amount)
-                }
+                },
+                onSwap = { viewModel.swapCurrencies() }
             )
         }
 
@@ -77,7 +78,8 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
 private fun HomeContent(
     converterData: ConverterData,
     amount: String,
-    onAmountChange: (String) -> Unit
+    onAmountChange: (String) -> Unit,
+    onSwap: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -90,7 +92,8 @@ private fun HomeContent(
             ConverterTile(
                 converterData = converterData,
                 amount = amount,
-                onAmountChange = onAmountChange
+                onAmountChange = onAmountChange,
+                onSwap = onSwap
             )
         }
         item {

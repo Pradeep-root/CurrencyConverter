@@ -1,5 +1,7 @@
 package com.pradeep.currencyconverter.presentation.components
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,9 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 
 @Composable
 fun Avatar(
@@ -34,14 +39,25 @@ fun Avatar(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            AsyncImage(
-                model = logoUrl,
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-            )
+            Crossfade(
+                targetState = logoUrl,
+                animationSpec = tween(500),
+                label = "avatar_crossfade"
+            ) { url ->
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(url)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .placeholderMemoryCacheKey(url)
+                        .build(),
+                    contentDescription = "Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                )
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.pradeep.currencyconverter.presentation.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,26 +28,53 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pradeep.currencyconverter.core.common.CurrencyFlags
 import com.pradeep.currencyconverter.domain.model.ConverterData
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConverterTile(
     converterData: ConverterData,
     amount: String,
-    onAmountChange: (String) -> Unit
+    onAmountChange: (String) -> Unit,
+    onSwap: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val rotation = remember { Animatable(0f) }
+    val swapProgress = remember { Animatable(0f) }
+    var cardHeightPx by remember { mutableStateOf(0f) }
+    val spacingPx = with(LocalDensity.current) { 12.dp.toPx() }
 
-    var topValue by remember { mutableStateOf(converterData.base) }
-    var bottomValue by remember { mutableStateOf(converterData.quote) }
+    fun triggerSwap() {
+        if (rotation.isRunning || swapProgress.isRunning) return // avoid double-tap glitches
+        scope.launch {
+            launch {
+                rotation.animateTo(
+                    targetValue = rotation.value + 180f,
+                    animationSpec = tween(350, easing = FastOutSlowInEasing)
+                )
+            }
+            swapProgress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(350, easing = FastOutSlowInEasing)
+            )
+
+            onSwap()
+
+            swapProgress.snapTo(0f)
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -56,13 +86,19 @@ fun ConverterTile(
             .padding(16.dp)
     ) {
 
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        cardHeightPx = coordinates.size.height.toFloat()
+                    }
+                    .graphicsLayer {
+                        translationY = swapProgress.value * (cardHeightPx + spacingPx)
+                    },
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
@@ -74,14 +110,11 @@ fun ConverterTile(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Avatar(
                             modifier = Modifier.size(45.dp),
-                            logoUrl = CurrencyFlags.getFlagUrl(topValue)
+                            logoUrl = CurrencyFlags.getFlagUrl(converterData.base)
                         )
-
                         Text(
                             text = converterData.base,
                             modifier = Modifier.padding(start = 8.dp),
@@ -105,15 +138,19 @@ fun ConverterTile(
                             textAlign = TextAlign.End,
                             color = MaterialTheme.colorScheme.onSurface
                         ),
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp),
+                        modifier = Modifier.padding(horizontal = 4.dp),
                         singleLine = true
                     )
                 }
             }
 
+            // BOTTOM CARD (quote currency)
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        translationY = -swapProgress.value * (cardHeightPx + spacingPx)
+                    },
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
@@ -125,14 +162,11 @@ fun ConverterTile(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Avatar(
                             modifier = Modifier.size(45.dp),
-                            logoUrl = CurrencyFlags.getFlagUrl(bottomValue)
+                            logoUrl = CurrencyFlags.getFlagUrl(converterData.quote)
                         )
-
                         Text(
                             text = converterData.quote,
                             modifier = Modifier.padding(start = 8.dp),
@@ -156,21 +190,19 @@ fun ConverterTile(
                             textAlign = TextAlign.End,
                             color = MaterialTheme.colorScheme.onSurface
                         ),
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp),
+                        modifier = Modifier.padding(horizontal = 4.dp),
                         singleLine = true
                     )
                 }
             }
         }
 
-
         IconButton(
-            onClick = {},
+            onClick = { triggerSwap() },
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(30.dp)
-                .graphicsLayer {}
+                .graphicsLayer { rotationZ = rotation.value }
                 .background(MaterialTheme.colorScheme.primary, CircleShape)
         ) {
             Icon(
@@ -180,7 +212,6 @@ fun ConverterTile(
             )
         }
     }
-
 }
 
 @Preview(showBackground = true)
@@ -195,7 +226,8 @@ fun ConverterTilePreview() {
             total = 124.00
         ),
         amount = "1.0",
-        onAmountChange = {}
+        onAmountChange = {},
+        onSwap = {}
     )
 }
 

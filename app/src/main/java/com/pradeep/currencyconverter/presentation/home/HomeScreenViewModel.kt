@@ -54,7 +54,6 @@ class HomeScreenViewModel @Inject constructor(
 
     fun fetchRate() {
         viewModelScope.launch {
-            _uiState.value = HomeUiState.Loading
             when (val result = getExchangeRateUseCase(base, quote)) {
                 is ApiResult.Error -> _uiState.value =
                     HomeUiState.Error(result.exception.toUserMessage())
@@ -78,5 +77,12 @@ class HomeScreenViewModel @Inject constructor(
         preferenceManager.save("base", base)
         preferenceManager.save("quote", quote)
         fetchRate()
+    }
+
+    fun swapCurrencies() {
+        val tempBase = base
+        base = quote
+        quote = tempBase
+        updateBaseAndQuote(base, quote)
     }
 }
