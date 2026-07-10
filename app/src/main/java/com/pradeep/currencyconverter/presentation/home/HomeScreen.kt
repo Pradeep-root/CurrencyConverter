@@ -12,24 +12,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pradeep.currencyconverter.core.common.CurrencyFlags
-import com.pradeep.currencyconverter.domain.model.CalculatorData
-import com.pradeep.currencyconverter.domain.model.CurrencyRate
-import com.pradeep.currencyconverter.domain.model.InputFieldData
-import com.pradeep.currencyconverter.presentation.components.CurrencyConverterTile
-import com.pradeep.currencyconverter.presentation.components.CurrencyItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pradeep.currencyconverter.domain.model.ConverterData
+import com.pradeep.currencyconverter.presentation.components.ConverterTile
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = hiltViewModel()
+    viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -37,11 +32,11 @@ fun HomeScreen(
     when (val state = uiState) {
         is HomeUiState.Loading -> LoadingContent()
         is HomeUiState.Success -> {
-            HomeContent(state.data, modifier)
+            HomeContent(state.data)
         }
 
         is HomeUiState.Error -> ErrorContent(
-            message = state.message, onRetry = viewModel::fetchCurrencyRates
+            message = state.message, onRetry = {viewModel.convertRate()}
         )
     }
 
@@ -67,55 +62,16 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
 }
 
 @Composable
-private fun HomeContent(data: List<CurrencyRate>, modifier: Modifier) {
+private fun HomeContent(converterData: ConverterData) {
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item { Spacer(modifier = Modifier.height(4.dp)) }
-        val selectedCurrency = data.find { it.quote == "INR" }?.let { currency ->
-            CalculatorData(
-                baseInputFieldData = InputFieldData(
-                    flagUrl = CurrencyFlags.getFlagUrl(currency.base) ?: "",
-                    symbol = currency.base,
-                    rate = currency.rate.toString(),
-                    total = "1.23"
-                ),
-                quoteInputFieldData = InputFieldData(
-                    flagUrl = CurrencyFlags.getFlagUrl(currency.quote) ?: "",
-                    symbol = currency.quote,
-                    rate = currency.rate.toString(),
-                    total = "1.23"
-                )
-            )
-        }
-        selectedCurrency?.let {
-            item {
-                CurrencyConverterTile(calculatorData = selectedCurrency)
-            }
-        }
-
         item {
             Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        val topFive = getTopFiveCurrencies(data)
-
-        items(topFive.size) { index ->
-            val currency = topFive[index]
-            CurrencyItem(
-                currency = currency,
-                isBase = currency.quote == "EUR"
-            )
+            ConverterTile(converterData)
         }
     }
-}
-
-private fun getTopFiveCurrencies(currencyRates: List<CurrencyRate>): List<CurrencyRate> {
-    val topCurrencies = listOf("USD", "EUR", "GBP", "CHF", "CNY")
-
-    return currencyRates.filter { it.quote in topCurrencies }
-        .sortedBy { topCurrencies.indexOf(it.quote) }
 }

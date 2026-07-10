@@ -26,7 +26,7 @@ fun Avatar(
     Card(
         modifier = modifier.size(60.dp),
         shape = CircleShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center,

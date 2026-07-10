@@ -183,6 +183,6 @@ object CurrencyFlags {
           "ZWL" to "$FLAG_CDN/zw.png"
      )
 
-     fun getFlagUrl(currencyCode: String): String? =
-          map[currencyCode.uppercase()]
+     fun getFlagUrl(currencyCode: String): String =
+          map[currencyCode.uppercase()]?: ""
 }

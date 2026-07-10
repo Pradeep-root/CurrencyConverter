@@ -4,7 +4,9 @@ import com.pradeep.currencyconverter.core.NetworkErrorMapper
 import com.pradeep.currencyconverter.core.common.ApiResult
 import com.pradeep.currencyconverter.core.dispatcher.DispatcherProvider
 import com.pradeep.currencyconverter.data.api.FrankFurterApiService
+import com.pradeep.currencyconverter.data.mapper.toConverterData
 import com.pradeep.currencyconverter.data.mapper.toDomain
+import com.pradeep.currencyconverter.domain.model.ConverterData
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.domain.repository.CurrencyRatesRepository
 import kotlinx.coroutines.withContext
@@ -25,4 +27,16 @@ class CurrencyRatesRepositoryImpl @Inject constructor(
                 ApiResult.Error(networkErrorMapper.map(e))
             }
         }
+
+    override suspend fun getRate(
+        base: String,
+        quote: String
+    ): ApiResult<ConverterData> = withContext(dispatcherProvider.io) {
+        try {
+            val response = apiService.getRate(base, quote)
+            ApiResult.Success(response.toConverterData())
+        } catch (e: Exception) {
+            ApiResult.Error(networkErrorMapper.map(e))
+        }
+    }
 }
