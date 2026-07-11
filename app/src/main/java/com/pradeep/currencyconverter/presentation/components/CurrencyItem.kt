@@ -1,6 +1,7 @@
 package com.pradeep.currencyconverter.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,10 +26,13 @@ import com.pradeep.currencyconverter.domain.model.CurrencyRate
 fun CurrencyItem(
     modifier: Modifier = Modifier,
     currency: CurrencyRate,
-    isBase: Boolean
+    isBase: Boolean,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -73,6 +77,7 @@ fun CurrencyItemPreview() {
             quote = "BSD",
             rate = 1.1551
         ),
-        isBase = true
+        isBase = true,
+        onClick = {}
     )
 }

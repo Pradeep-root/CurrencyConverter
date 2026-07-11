@@ -71,6 +71,18 @@ class HomeScreenViewModel @Inject constructor(
         calculateTotal()
     }
 
+    fun updateBase(newBase: String) {
+        base = newBase
+        preferenceManager.save("base", base)
+        fetchRate()
+    }
+
+    fun updateQuote(newQuote: String) {
+        quote = newQuote
+        preferenceManager.save("quote", quote)
+        fetchRate()
+    }
+
     fun updateBaseAndQuote(newBase: String, newQuote: String) {
         base = newBase
         quote = newQuote

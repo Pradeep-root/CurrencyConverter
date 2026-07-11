@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,9 @@ fun ConverterTile(
     converterData: ConverterData,
     amount: String,
     onAmountChange: (String) -> Unit,
-    onSwap: () -> Unit
+    onSwap: () -> Unit,
+    onBaseClick: () -> Unit,
+    onQuoteClick: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val rotation = remember { Animatable(0f) }
@@ -110,7 +113,10 @@ fun ConverterTile(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { onBaseClick() }
+                    ) {
                         Avatar(
                             modifier = Modifier.size(45.dp),
                             logoUrl = CurrencyFlags.getFlagUrl(converterData.base)
@@ -162,7 +168,10 @@ fun ConverterTile(
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { onQuoteClick() }
+                    ) {
                         Avatar(
                             modifier = Modifier.size(45.dp),
                             logoUrl = CurrencyFlags.getFlagUrl(converterData.quote)
@@ -227,7 +236,9 @@ fun ConverterTilePreview() {
         ),
         amount = "1.0",
         onAmountChange = {},
-        onSwap = {}
+        onSwap = {},
+        onBaseClick = {},
+        onQuoteClick = {}
     )
 }
 

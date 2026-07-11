@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.pradeep.currencyconverter.presentation.navigation.Screen
 import com.pradeep.currencyconverter.presentation.navigation.bottomNavItems
 import com.pradeep.currencyconverter.presentation.home.HomeScreen
-import com.pradeep.currencyconverter.presentation.search.SearchScreen
 import com.pradeep.currencyconverter.ui.theme.WiseDarkGreen
 import com.pradeep.currencyconverter.ui.theme.WiseLimeGreen
 
@@ -40,7 +39,6 @@ fun MainScreen() {
                 title = {
                     val title = when {
                         currentDestination?.hierarchy?.any { it.route == Screen.Home.route } == true -> Screen.Home.title
-                        currentDestination?.hierarchy?.any { it.route == Screen.Search.route } == true -> Screen.Search.title
                         currentDestination?.hierarchy?.any { it.route == Screen.Settings.route } == true -> Screen.Settings.title
                         else -> "FX Converter"
                     }
@@ -91,9 +89,6 @@ fun MainScreen() {
         ) {
             composable(Screen.Home.route) {
                 HomeScreen()
-            }
-            composable(Screen.Search.route) {
-                SearchScreen()
             }
             composable(Screen.Settings.route) {
                 // TODO Placeholder for Settings Screen

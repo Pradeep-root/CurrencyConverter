@@ -39,13 +39,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.presentation.components.BaseCurrencyTile
 import com.pradeep.currencyconverter.presentation.components.CurrencyItem
-import com.pradeep.currencyconverter.ui.theme.TextMutedLight
+import com.pradeep.currencyconverter.ui.theme.extendedColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    onCurrencySelected: (String) -> Unit = {}
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -78,12 +79,15 @@ fun SearchScreen(
                     }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                CurrencyRateList(state.data.filter { currencyRate ->
-                    currencyRate.quote.contains(
-                        viewModel.query.value,
-                        ignoreCase = true
-                    )
-                })
+                CurrencyRateList(
+                    currencyRates = state.data.filter { currencyRate ->
+                        currencyRate.quote.contains(
+                            viewModel.query.value,
+                            ignoreCase = true
+                        )
+                    },
+                    onCurrencySelected = onCurrencySelected
+                )
             }
         }
 
@@ -124,7 +128,7 @@ fun BaseCurrencyBar(
         Text(
             text = "BASE CURRENCY",
             style = MaterialTheme.typography.titleMedium,
-            color = TextMutedLight
+            color = MaterialTheme.extendedColors.textMuted
         )
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -173,13 +177,14 @@ fun SearchField(
 
 @Composable
 fun CurrencyRateList(
-    currencyRates: List<CurrencyRate>
+    currencyRates: List<CurrencyRate>,
+    onCurrencySelected: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "CURRENCIES",
             style = MaterialTheme.typography.titleMedium,
-            color = TextMutedLight
+            color = MaterialTheme.extendedColors.textMuted
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(
@@ -187,7 +192,11 @@ fun CurrencyRateList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(currencyRates) { item ->
-                CurrencyItem(currency = item, isBase = false)
+                CurrencyItem(
+                    currency = item,
+                    isBase = false,
+                    onClick = { onCurrencySelected(item.quote) }
+                )
             }
         }
     }
