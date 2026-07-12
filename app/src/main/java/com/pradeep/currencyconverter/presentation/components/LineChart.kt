@@ -386,7 +386,9 @@ private fun computeNiceAxisTicks(dataMin: Float, dataMax: Float, tickCount: Int)
     val niceMin = floor(dataMin / niceStep) * niceStep
     val niceMax = ceil(dataMax / niceStep) * niceStep
     val count = ((niceMax - niceMin) / niceStep + 0.5f).toInt()
-    return (0..count).map { niceMin + it * niceStep }
+    val ticks = (0..count).map { niceMin + it * niceStep }
+    // Filter out duplicates that might arise from rounding
+    return ticks.distinct()
 }
 
 /**
@@ -610,8 +612,13 @@ fun LineChart(
         val raw = allPoints.minOfOrNull { it.y } ?: 0f
         if (axisConfig.includeZeroInYRange) min(0f, raw) else raw
     }
-    val yTickValues = remember(yDataMin, yDataMax, axisConfig.yTickCount) {
-        computeNiceAxisTicks(yDataMin, yDataMax, axisConfig.yTickCount)
+    
+    // Add a 5% buffer to the Y range so the line doesn't touch the top/bottom
+    val yBufferedMax = yDataMax * 1.05f
+    val yBufferedMin = if (yDataMin == 0f) 0f else yDataMin * 0.95f
+
+    val yTickValues = remember(yBufferedMin, yBufferedMax, axisConfig.yTickCount) {
+        computeNiceAxisTicks(yBufferedMin, yBufferedMax, axisConfig.yTickCount)
     }
     val yMin = yTickValues.firstOrNull() ?: 0f
     val yMax = yTickValues.lastOrNull() ?: 1f
@@ -769,7 +776,7 @@ fun LineChart(
         val chartRight =
             if (isRtl) (if (axisConfig.showYLabels) size.width - maxYLabelWidth - labelGapPx else size.width - labelGapPx) else size.width - labelGapPx
         val chartBottom =
-            size.height - (if (axisConfig.showXLabels) maxXLabelHeight + labelGapPx else labelGapPx)
+            size.height - (if (axisConfig.showXLabels) maxXLabelHeight + labelGapPx + 16.dp.toPx() else labelGapPx)
         val chartTop = labelGapPx
         val chartWidth = chartRight - chartLeft
         val chartHeight = chartBottom - chartTop

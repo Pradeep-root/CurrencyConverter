@@ -1,11 +1,14 @@
 package com.pradeep.currencyconverter.presentation.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pradeep.currencyconverter.core.common.ApiResult
 import com.pradeep.currencyconverter.core.common.PreferenceManager
 import com.pradeep.currencyconverter.core.common.toUserMessage
 import com.pradeep.currencyconverter.domain.model.ConverterData
+import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.domain.usecase.GetExchangeRateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,14 +16,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
+import java.time.LocalDate
 import javax.inject.Inject
+
+enum class TimeRange(val label: String, val days: Int) {
+    ONE_WEEK("1W", 7),
+    ONE_MONTH("1M", 30),
+    THREE_MONTHS("3M", 90),
+    SIX_MONTHS("6M", 180),
+    ONE_YEAR("1Y", 365)
+}
 
 sealed class HomeUiState {
     data object Loading : HomeUiState()
-    data class Success(val data: ConverterData, val amount: String) : HomeUiState()
+    data class Success(
+        val data: ConverterData,
+        val amount: String,
+        val historicalData: List<CurrencyRate> = emptyList(),
+        val selectedRange: TimeRange = TimeRange.ONE_MONTH
+    ) : HomeUiState()
     data class Error(val message: String) : HomeUiState()
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getExchangeRateUseCase: GetExchangeRateUseCase,
@@ -39,16 +57,20 @@ class HomeScreenViewModel @Inject constructor(
         fetchRate()
     }
 
-
     private fun calculateTotal() {
         val total = (amount * converterData.rate)
             .toBigDecimal()
             .setScale(2, RoundingMode.HALF_UP)
             .toDouble()
 
+        val currentHistoricalData = emptyList<CurrencyRate>()
+        val currentRange = (uiState.value as? HomeUiState.Success)?.selectedRange ?: TimeRange.ONE_MONTH
+
         _uiState.value = HomeUiState.Success(
-            converterData.copy(total = total),
-            amount.toString()
+            data = converterData.copy(total = total),
+            amount = amount.toString(),
+            historicalData = currentHistoricalData,
+            selectedRange = currentRange
         )
     }
 
@@ -97,4 +119,16 @@ class HomeScreenViewModel @Inject constructor(
         quote = tempBase
         updateBaseAndQuote(base, quote)
     }
+
+    fun updateTimeRange(range: TimeRange) {
+        val currentState = _uiState.value
+        if (currentState is HomeUiState.Success) {
+            _uiState.value = currentState.copy(selectedRange = range)
+        }
+    }
+
+    fun getStartDateOneYearAgo(): String {
+        return LocalDate.now().minusYears(1).toString()
+    }
+
 }
