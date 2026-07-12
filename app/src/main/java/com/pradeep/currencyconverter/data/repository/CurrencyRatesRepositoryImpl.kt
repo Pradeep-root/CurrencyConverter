@@ -39,4 +39,17 @@ class CurrencyRatesRepositoryImpl @Inject constructor(
             ApiResult.Error(networkErrorMapper.map(e))
         }
     }
+
+    override suspend fun getHistoricalRates(
+        from: String,
+        base: String,
+        quote: String
+    ): ApiResult<List<CurrencyRate>> = withContext(dispatcherProvider.io) {
+        try {
+            val response = apiService.getHistoricalData(from, base, quote)
+            ApiResult.Success(response.map { it.toDomain() })
+        } catch (e: Exception) {
+            ApiResult.Error(networkErrorMapper.map(e))
+        }
+    }
 }

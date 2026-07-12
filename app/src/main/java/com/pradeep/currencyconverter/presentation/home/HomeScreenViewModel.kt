@@ -10,6 +10,7 @@ import com.pradeep.currencyconverter.core.common.toUserMessage
 import com.pradeep.currencyconverter.domain.model.ConverterData
 import com.pradeep.currencyconverter.domain.model.CurrencyRate
 import com.pradeep.currencyconverter.domain.usecase.GetExchangeRateUseCase
+import com.pradeep.currencyconverter.domain.usecase.GetHistoricalRatesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,6 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 enum class TimeRange(val label: String, val days: Int) {
-    ONE_WEEK("1W", 7),
     ONE_MONTH("1M", 30),
     THREE_MONTHS("3M", 90),
     SIX_MONTHS("6M", 180),
@@ -35,6 +35,7 @@ sealed class HomeUiState {
         val historicalData: List<CurrencyRate> = emptyList(),
         val selectedRange: TimeRange = TimeRange.ONE_MONTH
     ) : HomeUiState()
+
     data class Error(val message: String) : HomeUiState()
 }
 
@@ -42,6 +43,7 @@ sealed class HomeUiState {
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getExchangeRateUseCase: GetExchangeRateUseCase,
+    private val getHistoricalRatesUseCase: GetHistoricalRatesUseCase,
     private val preferenceManager: PreferenceManager
 ) : ViewModel() {
 
@@ -55,6 +57,7 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         fetchRate()
+        fetchHistoricalRates()
     }
 
     private fun calculateTotal() {
@@ -63,8 +66,9 @@ class HomeScreenViewModel @Inject constructor(
             .setScale(2, RoundingMode.HALF_UP)
             .toDouble()
 
-        val currentHistoricalData = emptyList<CurrencyRate>()
-        val currentRange = (uiState.value as? HomeUiState.Success)?.selectedRange ?: TimeRange.ONE_MONTH
+        val currentState = _uiState.value
+        val currentHistoricalData = (currentState as? HomeUiState.Success)?.historicalData ?: emptyList()
+        val currentRange = (currentState as? HomeUiState.Success)?.selectedRange ?: TimeRange.ONE_MONTH
 
         _uiState.value = HomeUiState.Success(
             data = converterData.copy(total = total),
@@ -88,6 +92,26 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun fetchHistoricalRates() {
+        viewModelScope.launch {
+            when (val result = getHistoricalRatesUseCase(
+                from = getStartDateOneYearAgo(),
+                base = base,
+                quote = quote
+            )) {
+                is ApiResult.Error -> _uiState.value =
+                    HomeUiState.Error(result.exception.toUserMessage())
+
+                is ApiResult.Success -> {
+                    val currentState = _uiState.value
+                    if (currentState is HomeUiState.Success) {
+                        _uiState.value = currentState.copy(historicalData = result.data)
+                    }
+                }
+            }
+        }
+    }
+
     fun updateAmount(newAmount: Double) {
         amount = newAmount
         calculateTotal()
@@ -97,12 +121,14 @@ class HomeScreenViewModel @Inject constructor(
         base = newBase
         preferenceManager.save("base", base)
         fetchRate()
+        fetchHistoricalRates()
     }
 
     fun updateQuote(newQuote: String) {
         quote = newQuote
         preferenceManager.save("quote", quote)
         fetchRate()
+        fetchHistoricalRates()
     }
 
     fun updateBaseAndQuote(newBase: String, newQuote: String) {
@@ -111,6 +137,7 @@ class HomeScreenViewModel @Inject constructor(
         preferenceManager.save("base", base)
         preferenceManager.save("quote", quote)
         fetchRate()
+        fetchHistoricalRates()
     }
 
     fun swapCurrencies() {

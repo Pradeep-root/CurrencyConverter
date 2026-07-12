@@ -13,4 +13,12 @@ interface FrankFurterApiService {
 
     @GET("/v2/rate/{base}/{quote}")
     suspend fun getRate(@Path("base") base: String, @Path("quote") quote: String): CurrencyRateDto
+
+    @GET("/v2/rates")
+    suspend fun getHistoricalData(
+        @Query("from") from: String,
+        @Query("base") base: String,
+        @Query("quotes") quote: String
+    ): List<CurrencyRateDto>
+
 }

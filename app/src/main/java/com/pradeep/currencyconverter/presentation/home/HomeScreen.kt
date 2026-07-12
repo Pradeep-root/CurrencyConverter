@@ -1,7 +1,9 @@
 package com.pradeep.currencyconverter.presentation.home
 
+import LineAxisConfig
 import LineChart
 import LineChartStyle
+import LineCrosshairConfig
 import LineDataPoint
 import LineDataSet
 import LineSeries
@@ -196,6 +198,7 @@ private fun HistoricalRateChart(
     quote: String
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("MMM d")
+    var selectedPointIndex by remember { mutableStateOf<Int?>(null) }
 
     // Filter data based on selected range
     val filteredData = remember(historicalData, selectedRange) {
@@ -305,7 +308,20 @@ private fun HistoricalRateChart(
                     LineChart(
                         dataSet = dataSet,
                         modifier = Modifier.fillMaxSize(),
-                        style = LineChartStyle(curveType = LineCurveType.MonotoneCubic)
+                        style = LineChartStyle(curveType = LineCurveType.MonotoneCubic),
+                        axisConfig = LineAxisConfig(
+                            includeZeroInYRange = false,
+                            yLabelFormatter = { "%.2f".format(it) },
+                            yTickCount = 6,
+                            maxXLabels = 6
+                        ),
+                        crosshairConfig = LineCrosshairConfig(
+                            tooltipFormatter = { _, p -> 
+                                "${p.label}\n${"%.2f".format(p.y)}" 
+                            }
+                        ),
+                        selectedPointIndex = selectedPointIndex,
+                        onPointSelected = { selectedPointIndex = it }
                     )
                 }
             }
