@@ -47,7 +47,7 @@ class HomeScreenViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager
 ) : ViewModel() {
 
-    private var amount: Double = 1.0
+    private var amount: String = "1.0"
     private var base: String = preferenceManager.get("base", "EUR")
     private var quote: String = preferenceManager.get("quote", "INR")
     private lateinit var converterData: ConverterData
@@ -61,7 +61,8 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun calculateTotal() {
-        val total = (amount * converterData.rate)
+        val numericAmount = amount.toDoubleOrNull() ?: 0.0
+        val total = (numericAmount * converterData.rate)
             .toBigDecimal()
             .setScale(2, RoundingMode.HALF_UP)
             .toDouble()
@@ -72,7 +73,7 @@ class HomeScreenViewModel @Inject constructor(
 
         _uiState.value = HomeUiState.Success(
             data = converterData.copy(total = total),
-            amount = amount.toString(),
+            amount = amount,
             historicalData = currentHistoricalData,
             selectedRange = currentRange
         )
@@ -112,7 +113,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun updateAmount(newAmount: Double) {
+    fun updateAmount(newAmount: String) {
         amount = newAmount
         calculateTotal()
     }

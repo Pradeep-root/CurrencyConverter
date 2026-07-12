@@ -318,12 +318,12 @@ data class LineChartStyle(
  */
 @Immutable
 data class LineAnimationConfig(
-    val entrySpec: AnimationSpec<Float> = tween(900, easing = FastOutSlowInEasing),
+    val entrySpec: AnimationSpec<Float> = tween(400, easing = FastOutSlowInEasing),
     val morphSpec: AnimationSpec<Float> = spring(
         dampingRatio = 0.8f,
         stiffness = Spring.StiffnessLow
     ),
-    val staggerMs: Long = 12L,
+    val staggerMs: Long = 5L,
     val startDelayMs: Long = 80L,
     val seriesStaggerMs: Long = 120L
 )

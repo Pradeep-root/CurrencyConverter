@@ -51,8 +51,7 @@ fun HomeScreen(
                     historicalData = state.historicalData,
                     selectedRange = state.selectedRange,
                     onAmountChange = { amountString ->
-                        val amount = amountString.toDoubleOrNull() ?: 0.0
-                        viewModel.updateAmount(amount)
+                        viewModel.updateAmount(amountString)
                     },
                     onSwap = { viewModel.swapCurrencies() },
                     onTimeRangeSelected = { viewModel.updateTimeRange(it) },
